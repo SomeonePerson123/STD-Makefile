@@ -1,5 +1,5 @@
 EXE := Bin/EXE_NAME
-FILE_ENDINGS := .cpp .c
+FILE_ENDINGS := .cpp
 
 OBJ_DIR := Bin/Obj/
 SRC_DIR := src/
@@ -31,10 +31,4 @@ $(OBJ_DIR)%.o: $(1)%.cpp
 	$(CC) $(CXXFLAGS) -c $$< -o $$@
 endef
 
-define generateRulesC
-$(OBJ_DIR)%.o: $(1)%.c
-	$(CC) $(CXXFLAGS) -c $$< -o $$@
-endef
-
 $(foreach targetdir, $(DIRS), $(eval $(call generateRulesCpp, $(targetdir))))
-$(foreach targetdir, $(DIRS), $(eval $(call generateRulesC, $(targetdir))))
