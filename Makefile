@@ -10,10 +10,17 @@ INCLUDE_DIRS := $(addprefix -I, $(DIRS))
 SRC := $(foreach ext, $(FILE_ENDINGS), $(shell find $(SRC_DIR) -name '*$(ext)'))
 OBJ := $(foreach file, $(SRC), $(addprefix $(OBJ_DIR), $(notdir $(addsuffix .o, $(basename $(file))))))
 
+
+LD := clang++
+
+LIBRARIES := sdl3
+LDFLAGS := -bundle
+LDFLAGS += $(foreach library, $(LIBRARIES), $(shell pkg-config --libs $(library)))
+
 all: dirs $(EXE)
 
 $(EXE): $(OBJ)
-	$(CC) -o $(EXE) $^ $(LDFLAGS)
+	$(LD) -o $(EXE) $^ $(LDFLAGS)
 
 dirs:
 	$(shell mkdir -p $(OBJ_DIR))
@@ -23,8 +30,9 @@ clean:
 
 
 CC := clang++
-LDFLAGS  :=
+
 CXXFLAGS := -std=c++17 $(INCLUDE_DIRS)
+CXXFLAGS += $(foreach library, $(LIBRARIES), $(shell pkg-config --cflags $(library)))
 
 define generateRulesCpp
 $(OBJ_DIR)%.o: $(1)%.cpp
