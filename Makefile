@@ -13,7 +13,7 @@ OBJ := $(foreach file, $(SRC), $(addprefix $(OBJ_DIR), $(notdir $(addsuffix .o, 
 
 LD := clang++
 
-LIBRARIES := sdl3
+LIBRARIES :=
 LDFLAGS := -bundle
 LDFLAGS += $(foreach library, $(LIBRARIES), $(shell pkg-config --libs $(library)))
 
