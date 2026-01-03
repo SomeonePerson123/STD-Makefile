@@ -8,13 +8,13 @@ DIRS := $(shell find $(SRC_DIR) -type d)
 INCLUDE_DIRS := $(addprefix -I, $(DIRS))
 
 SRC := $(foreach ext, $(FILE_ENDINGS), $(shell find $(SRC_DIR) -name '*$(ext)'))
-OBJ := $(foreach file, $(SRC), $(addprefix $(OBJ_DIR), $(notdir $(addsuffix .o, $(basename $(file))))))
+OBJ := $(foreach ext, $(FILE_ENDINGS), $(patsubst %$(ext), $(OBJ_DIR)%.o, $(SRC)))
 
 
 LD := clang++
 
 LIBRARIES :=
-LDFLAGS := -bundle
+LDFLAGS := 
 LDFLAGS += $(foreach library, $(LIBRARIES), $(shell pkg-config --libs $(library)))
 
 all: dirs $(EXE)
@@ -34,9 +34,6 @@ CC := clang++
 CXXFLAGS := -std=c++17 $(INCLUDE_DIRS)
 CXXFLAGS += $(foreach library, $(LIBRARIES), $(shell pkg-config --cflags $(library)))
 
-define generateRulesCpp
 $(OBJ_DIR)%.o: $(1)%.cpp
-	$(CC) $(CXXFLAGS) -c $$< -o $$@
-endef
-
-$(foreach targetdir, $(DIRS), $(eval $(call generateRulesCpp, $(targetdir))))
+	mkdir -p $(dir $@)
+	$(CC) $(CXXFLAGS) -c $< -o $@
