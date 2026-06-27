@@ -8,7 +8,7 @@ DIRS := $(shell find $(SRC_DIR) -type d)
 INCLUDE_DIRS := $(addprefix -I, $(DIRS))
 
 SRC := $(foreach ext, $(FILE_ENDINGS), $(shell find $(SRC_DIR) -name '*$(ext)'))
-OBJ := $(addsuffix .o, $(patsubst ./%, $(OBJ_DIR)%, $(basename $(SRC))))
+OBJ := $(foreach ext, $(FILE_ENDINGS), $(patsubst %$(ext), $(OBJ_DIR)%.o, $(SRC)))
 
 
 LD := clang++
